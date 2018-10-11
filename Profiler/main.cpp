@@ -9,14 +9,15 @@
 #include <iostream>
 #include <chrono>
 
+class LogDuration;
+
+#define UNIQ_ID_IMPL(lineno) _a_local_var_##lineno
+#define UNIQ_ID(lineno) UNIQ_ID_IMPL(lineno)
+
+#define LOG_DURATION(message) \
+    LogDuration UNIQ_ID ( __LINE__ ) { message };    // defines unique identifier in term of single .cpp file;
+
 typedef std::chrono::steady_clock::time_point timePoint;
-
-
-int main() 
-    {
-    
-    return 0;
-    }
 
 class LogDuration
     {
@@ -29,7 +30,7 @@ class LogDuration
     */
     
     public:
-        explicit LogDuration ( const std::string& messageTemp = "" ) : // explicit as no any other object should be converted into LogDuration
+        explicit LogDuration ( const std::string& messageTemp = "" ) : // explicit as no any other object should be converted into LogDuration;
             start ( std::chrono::steady_clock::now() ), 
             message ( messageTemp + ": " )
             {
@@ -51,3 +52,20 @@ class LogDuration
         std::string message; // message provided in console log;
 
     };
+
+
+int main() 
+    {
+    
+    {
+    LOG_DURATION ( "Test" );
+    
+    for ( auto i = 0; i < INT_MAX; i++ )
+        {
+        LOG_DURATION ( std::to_string ( i ) );
+        
+        }
+    }
+    
+    return 0;
+    }
