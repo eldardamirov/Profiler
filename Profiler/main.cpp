@@ -18,11 +18,20 @@ int main()
     return 0;
     }
 
-
 class LogDuration
     {
+    /*
+    wrap code block in {} to measure its work time, e.g:
+    {
+    LogDuration thisBlockDuration;
+    ...
+    }
+    */
+    
     public:
-        LogDuration() : start ( std::chrono::steady_clock::now() )
+        explicit LogDuration ( const std::string& messageTemp = "" ) : // explicit as no any other object should be converted into LogDuration
+            start ( std::chrono::steady_clock::now() ), 
+            message ( messageTemp + ": " )
             {
             
             }
@@ -33,14 +42,12 @@ class LogDuration
             
             auto duration = ( finish - start );
             
-            std::cerr << std::chrono::duration_cast <std::chrono::milliseconds> ( duration ).count() << "ms" << "\n";
+            std::cerr << message << std::chrono::duration_cast <std::chrono::milliseconds> ( duration ).count() << "ms" << "\n";
             }
         
     private:
         timePoint start;
         timePoint finish;
-    
-    
-    
-    
+        std::string message; // message provided in console log;
+
     };
